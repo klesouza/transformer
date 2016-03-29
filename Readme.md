@@ -1,24 +1,35 @@
 Simple method for transforming CSV to JSON  
   
 **USAGE**  
-*python [PATH TO transform.py] [PATH TO MAPPER FILE] [PATH TO CSV] [PATH OUTPUT FILE]*  
-Example: 
-```bash
-python ~/transform.py ~/mapper.json ~/mydata.csv ~/output.json
+``python [PATH TO transform.py] [PATH TO MAPPER FILE] [PATH TO CSV] [PATH OUTPUT FILE]``   
+  
+*__Example usage:__*  
+``python ~/transform.py ~/mapper.json ~/mydata.csv ~/output.json``
+
+*__Example CSV file:__*    
+``Name;wage``  
+``Joseph Smith;5.000,00``
+  
+*__Example Mapper file:__*    
+```  
+{
+    "Name": 0, //field index definition
+    "Wage":{ //Custom field definition
+        "source": 1,
+        "formatter": "float",
+        "decimal": ","  
+    }  
+}  
 ```
-MAPPER FILE  
-    JSON FILE  
-    Format (Field name, csv position index (0-based)):  
-    ```JSON  
-        {  
-            "Field1": 0, //field index definition  
-            "Field2":{ //Custom field definition  
-                "source": 0,  
-                "formatter": "float",  
-                "decimal": ","  
-            }  
-        }  
-    ```
+  
+*__Example output file:__*    
+```
+{  
+    Name: "Joseph Smith",
+    Wage: 5000.00
+}
+```
+  
     - Custom fields definition  
         id(bool): specifies if the field identifies unique records  
         source(int): csv position index (0-based)  
