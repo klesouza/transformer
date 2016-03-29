@@ -1,12 +1,14 @@
 Simple method for transforming CSV to JSON
 
-USAGE
+**USAGE**
     - python [PATH TO transform.py] [PATH TO MAPPER FILE] [PATH TO CSV] [PATH OUTPUT FILE]
-Example: python ~/transform.py ~/mapper.json ~/mydata.csv ~/output.json
+Example: 
+> python ~/transform.py ~/mapper.json ~/mydata.csv ~/output.json
 
-MAPPER FILE
-    - JSON FILE
-    - Format (Field name, csv position index (0-based)):
+**MAPPER FILE**
+    * JSON FILE
+    * Format (Field name, csv position index (0-based)):
+    ```
         {
             "Field1": 0, //field index definition
             "Field2":{ //Custom field definition
@@ -15,7 +17,8 @@ MAPPER FILE
                 "decimal": ","
             }
         }
-    - Custom fields definition
+    ```
+    * Custom fields definition
         id(bool): specifies if the field identifies unique records
         source(int): csv position index (0-based)
         formatter(string): custom field formatting
