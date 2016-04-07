@@ -12,6 +12,10 @@ class Transformer:
     def __init__(self, custom_options = {}):
         self.options.update(custom_options)
 
+    def _log(self, str):
+        if self.options["verbose"]:
+            print str
+
     def _formatFuncs(self, config):
         formatter = config['formatter']
         if formatter == "date":
@@ -56,15 +60,12 @@ class Transformer:
                     continue
                 self._accessProp(obj, key.split('.'), val)
             except:
-                print "Erro no mapeamento: ", key
+                self._log("Erro no mapeamento: {} ({}) - id {}".format(key, line[idx], line[0]))
                 if not isinstance(value, int) and "skip_on_error" in value and value["skip_on_error"] == True:
                     continue
                 raise
         return obj
 
-    def _log(self, str):
-        if self.options["verbose"]:
-            print str
     def do(self):
         import json, codecs
         config = json.load(open(self.options["config_file"], 'r'))
