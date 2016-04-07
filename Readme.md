@@ -1,15 +1,15 @@
 Simple method for transforming CSV to JSON  
-  
+
 **USAGE**  
 ``python [PATH TO transform.py] [PATH TO MAPPER FILE] [PATH TO CSV] [PATH OUTPUT FILE]``   
-  
+
 *__Example usage:__*  
 ``python ~/transform.py ~/mapper.json ~/mydata.csv ~/output.json``
 
 *__Example CSV file:__*    
 ``Name;wage``  
 ``Joseph Smith;5.000,00``
-  
+
 *__Example Mapper file:__*    
 ```  
 {
@@ -21,7 +21,7 @@ Simple method for transforming CSV to JSON
     }  
 }  
 ```
-  
+
 *__Example output file:__*    
 ```
 {  
@@ -29,7 +29,7 @@ Simple method for transforming CSV to JSON
     Wage: 5000.00
 }
 ```
-  
+
     - Custom fields definition  
         id(bool): specifies if the field identifies unique records  
         source(int): csv position index (0-based)  
@@ -45,7 +45,8 @@ Simple method for transforming CSV to JSON
         decimal(char): specifies the decimal separator
         mapping(dictionary): a dictionary with dictionary with key(input) and value (output)
         value(anything): static value to be used
-        padl(int): pad left the input
+        padl(int): pad left the input  
+        ignoreIfNullEmpty: the field is not added to the output if the value is null or empty
     - Defining array field names
         { "ArrayField[].Field": 0 }
         "The arrays items are grouped for records in sequence and with the same id"

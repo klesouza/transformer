@@ -27,7 +27,7 @@ class Transformer:
             return lambda x: config["mapping"][str(x)]
         elif formatter == "static":
             return lambda x: config["value"]
-        elif 'padl' in formatter:
+        if 'padl' in formatter:
             import re
             return lambda x: x.zfill(int(re.search('\((\d+)\)','lpad(11)').group(1)))
         return None
@@ -51,10 +51,13 @@ class Transformer:
             try:
                 idx = value if isinstance(value, int) else value['source']
                 val = line[idx] if isinstance(value, int) or not 'formatter' in value else self._formatFuncs(value)(line[idx])
+                if (not isinstance(value, int) and 'ignoreIfNullEmpty' in value and value['ignoreIfNullEmpty'] == True
+                    and (val is None or val == '')):
+                    continue
                 self._accessProp(obj, key.split('.'), val)
             except:
                 print "Erro no mapeamento: ", key
-                if "skip_on_error" in value and value["skip_on_error"] == True:
+                if not isinstance(value, int) and "skip_on_error" in value and value["skip_on_error"] == True:
                     continue
                 raise
         return obj
