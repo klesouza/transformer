@@ -60,7 +60,7 @@ class Transformer:
                     continue
                 self._accessProp(obj, key.split('.'), val)
             except:
-                self._log("Erro no mapeamento: {} ({}) - id {}".format(key, line[idx], line[0]))
+                self._log("Erro no mapeamento: {} ({}) - id {}".format(key.encode(encoding=self.options["encoding"]), line[idx].encode(encoding=self.options["encoding"]), line[0].encode(encoding=self.options["encoding"]))) #decode strings
                 if not isinstance(value, int) and "skip_on_error" in value and value["skip_on_error"] == True:
                     continue
                 raise
@@ -74,7 +74,7 @@ class Transformer:
             of.write('[')
         if self.options["header"]:
             line = f.readline()
-        idx = 0
+        idx = None
         for k,c in config.iteritems():
             if not isinstance(c,int) and 'id' in c:
                 idx = k
@@ -91,7 +91,7 @@ class Transformer:
             except:
                 self._log("Erro no registro: {}".format(i))
                 raise
-            if id == transformed[idx]:
+            if idx is not None and id == transformed[idx]:
                 for c,v in transformed.iteritems():
                     if isinstance(v, list):
                         for l in v:
@@ -104,7 +104,8 @@ class Transformer:
                     first = False
                 lasttransformed = transformed
                 i += 1
-            id = transformed[idx]
+            if idx is not None:
+                id = transformed[idx]
         with codecs.open(self.options["output_file"], 'a', encoding = self.options["encoding"]) as of:
             if lasttransformed != None:
                 of.write((',' if not first else '') +json.dumps(lasttransformed))
