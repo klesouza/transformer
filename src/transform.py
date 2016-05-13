@@ -1,17 +1,25 @@
+import json, codecs
+
 class Transformer:
     options = {
         'config_file': "mapper.json",
         'data_file': "data.csv",
-        'output_file': "outpout.json",
+        'output_file': "output.json",
         'encoding': "ISO-8859-1",
         'sep': ";",
         'limit': None,
         'header': True,
         'verbose': True
     }
-    def __init__(self, custom_options = {}):
-        self.options.update(custom_options)
-
+    mapper = None
+    def __init__(self, config_file = None):
+        if config_file is None:
+            raise('Config file not informed')
+        else:
+            config = json.load(open(config_file, 'r'))
+            self.options.update(config["options"])
+            self.mapper = config["mapper"] 
+        
     def _log(self, str):
         if self.options["verbose"]:
             print str
@@ -67,8 +75,7 @@ class Transformer:
         return obj
 
     def do(self):
-        import json, codecs
-        config = json.load(open(self.options["config_file"], 'r'))
+        config = self.mapper
         f = codecs.open(self.options["data_file"], 'r', encoding = self.options["encoding"])
         with codecs.open(self.options["output_file"], 'w', encoding = self.options["encoding"]) as of:
             of.write('[')
@@ -115,6 +122,7 @@ if __name__ == '__main__':
     import sys, time
     print 'Processando...'
     start_time = time.time()
-    t = Transformer({'config_file': sys.argv[1], 'data_file': sys.argv[2],'output_file': sys.argv[3], 'limit': int(sys.argv[4]) if len(sys.argv) > 4 else None})
+    t = Transformer(config_file=sys.argv[1])
+        
     t.do()
     print("--- %s seconds ---" % (time.time() - start_time))
