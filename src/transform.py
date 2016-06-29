@@ -37,11 +37,15 @@ class Transformer:
             return lambda x: int(x)
         elif formatter == "mapping":
             return lambda x: config["mapping"][str(x)]
+        elif formatter == "string":
+            if 'replace' in config:
+                import re
+                return lambda x: re.sub(config["replace"], '', x)
         elif formatter == "static":
             return lambda x: config["value"]
-        if 'padl' in formatter:
+        if 'padl' in config:
             import re
-            return lambda x: x.zfill(int(re.search('\((\d+)\)','lpad(11)').group(1)))
+            return lambda x: x.zfill(int(re.search('\((\d+)\)','lpad('+config["padl"]+')').group(1)))
         return None
     def _accessProp(self, obj, path, value):
         key = path[0]
@@ -117,7 +121,7 @@ class Transformer:
             if lasttransformed != None:
                 of.write((',' if not first else '') +json.dumps(lasttransformed))
             of.write(']')
-        self._log('registros: {}'.format(i))
+        print 'registros: {}'.format(i)
 if __name__ == '__main__':
     import sys, time
     print 'Processando...'
